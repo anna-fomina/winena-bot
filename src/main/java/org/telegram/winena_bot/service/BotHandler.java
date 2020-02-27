@@ -24,6 +24,7 @@ public class BotHandler {
                 repository.save(new TelegramUser().setId(message.getFrom().getId()).setStatus(NEW)));
 
         BotResponseDTO response;
+        //TODO если одни картинки - текста нет
         if(message.getText().equals("/start") || user.getStatus() == NEW) {
             response = startBotProvider.getRequest(message);
         } else {

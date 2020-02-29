@@ -3,13 +3,13 @@ package org.telegram.winena_bot.bot;
 import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.winena_bot.service.BotHandler;
+import org.telegram.winena_bot.service.MessageHandler;
 
 @RequiredArgsConstructor
 public class WinenaBot extends TelegramLongPollingBot {
     private final String botName;
     private final String botToken;
-    private final BotHandler handler;
+    private final MessageHandler handler;
 
     @SuppressWarnings("unchecked")
     @Override

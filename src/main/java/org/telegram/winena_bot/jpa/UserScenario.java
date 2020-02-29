@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.telegram.winena_bot.BotStatus;
+import org.telegram.winena_bot.Scenario;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -16,13 +16,13 @@ import javax.validation.constraints.Positive;
 @Entity
 @Getter @Setter @Accessors(chain = true)
 @NoArgsConstructor
-public class TelegramUser {
+public class UserScenario {
     @Id
     @Positive
-    private Integer id;
+    private Integer userId;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private BotStatus status;
+    private Scenario scenario;
 }
 

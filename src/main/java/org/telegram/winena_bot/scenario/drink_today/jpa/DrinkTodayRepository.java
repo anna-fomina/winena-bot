@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface DrinkTodayRepository extends JpaRepository<DrinkToday, Integer> {
     List<DrinkToday> findAllByUserId(int userId);
+    List<DrinkToday> findAllByUserIdAndPoints(int userId, int points);
 }

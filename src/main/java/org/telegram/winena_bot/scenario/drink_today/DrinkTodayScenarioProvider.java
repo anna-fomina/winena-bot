@@ -11,6 +11,7 @@ import org.telegram.winena_bot.scenario.drink_today.jpa.DrinkTodayRepository;
 import org.telegram.winena_bot.scenario.dto.ScenarioResponseDTO;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static java.util.stream.Collectors.toList;
@@ -28,13 +29,29 @@ public class DrinkTodayScenarioProvider implements ScenarioProvider {
         return scenario == DRINK_TODAY;
     }
 
+    private DrinkTodayQuestionProvider getProvider(String name) {
+        return providers.stream().filter(p -> p.getName().equals(name)).findFirst().orElseThrow();
+    }
+
+    private Optional<DrinkTodayQuestionProvider> findOpenQuestion(int userId) {
+        return repository.findAllByUserIdAndPoints(userId, -1).stream()
+                .map(q -> getProvider(q.getQuestion())).findFirst();
+    }
+
+    private Optional<DrinkTodayQuestionProvider> findOpenOrNewQuestion(int userId) {
+        var openQuestion = findOpenQuestion(userId);
+        if(openQuestion.isPresent()) return openQuestion;
+
+        var oldQuestions = repository.findAllByUserId(userId).stream().map(DrinkToday::getQuestion).collect(toList());
+        return providers.stream()
+                .filter(p -> !oldQuestions.contains(p.getName()))
+                .findAny();
+    }
+
     @Override
     public ScenarioResponseDTO getRequest(Message message) {
         var userId = message.getFrom().getId();
-        var oldQuestions = repository.findAllByUserId(userId).stream().map(DrinkToday::getQuestion).collect(toList());
-        var newQuestion = providers.stream()
-                .filter(p -> !oldQuestions.contains(p.getName()))
-                .findAny();;
+        var newQuestion = findOpenOrNewQuestion(userId);
         if(newQuestion.isEmpty()) {
             return getErrorResponse(message.getChatId());
         } else {
@@ -58,12 +75,9 @@ public class DrinkTodayScenarioProvider implements ScenarioProvider {
         var openQuestion = questions.stream().filter(q -> q.getPoints() == -1).findFirst();
         if(openQuestion.isEmpty()) return getErrorResponse(message.getChatId());
 
-        var provider = providers.stream()
-                .filter(p -> p.getName().equals(openQuestion.get().getQuestion()))
-                .findFirst();
-        if(provider.isEmpty()) return getErrorResponse(message.getChatId());
+        var provider = getProvider(openQuestion.get().getQuestion());
 
-        var points = provider.get().checkResponse(message.getText());
+        var points = provider.checkResponse(message.getText());
         if(points == -1) return getRepeatResponse(message.getChatId());
 
         if(questions.size() == providers.size() || (questions.size() > 3 && ThreadLocalRandom.current().nextBoolean())) {

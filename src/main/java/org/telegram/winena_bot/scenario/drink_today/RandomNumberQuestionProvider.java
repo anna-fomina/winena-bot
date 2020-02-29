@@ -26,7 +26,7 @@ public class RandomNumberQuestionProvider implements DrinkTodayQuestionProvider 
     public SendMessage getQuestion(long chatId) {
         return BotHelper.getSendMessage(
                 chatId,
-                "Может нам подскажет судьба\uD83C\uDFB0\n. Выбери любое число\uD83C\uDFB2",
+                "Может нам подскажет судьба\uD83C\uDFB0. Выбери любое число\uD83C\uDFB2",
                 List.of(ONE, TWO, THREE),
                 List.of(FOUR, FIVE, SIX)
         );

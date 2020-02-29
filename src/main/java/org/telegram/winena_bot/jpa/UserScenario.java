@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.telegram.winena_bot.Scenario;
+import org.telegram.winena_bot.service.Scenario;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

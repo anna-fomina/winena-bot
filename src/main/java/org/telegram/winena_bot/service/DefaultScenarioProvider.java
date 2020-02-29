@@ -3,10 +3,9 @@ package org.telegram.winena_bot.service;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.winena_bot.Scenario;
 import org.telegram.winena_bot.dto.ScenarioResponseDTO;
 
-import static org.telegram.winena_bot.Scenario.*;
+import static org.telegram.winena_bot.service.Scenario.*;
 
 @Component
 public class DefaultScenarioProvider implements ScenarioProvider {

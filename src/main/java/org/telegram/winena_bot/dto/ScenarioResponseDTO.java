@@ -2,7 +2,7 @@ package org.telegram.winena_bot.dto;
 
 import lombok.Builder;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.winena_bot.Scenario;
+import org.telegram.winena_bot.service.Scenario;
 
 @Builder
 public class ScenarioResponseDTO {

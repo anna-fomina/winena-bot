@@ -8,15 +8,15 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
-class BotHelper {
-    static SendMessage getSendMessage(long chatId, String text) {
+public class BotHelper {
+    public static SendMessage getSendMessage(long chatId, String text) {
         SendMessage s = new SendMessage();
         s.setChatId(chatId);
         s.setText(text);
         return s;
     }
 
-    static SendMessage getSendMessage(long chatId, String text, String... answers) {
+    public static SendMessage getSendMessage(long chatId, String text, String... answers) {
         SendMessage s = getSendMessage(chatId, text);
 
         var buttons = Stream.of(answers).map(a -> {

@@ -13,8 +13,8 @@ public class WinenaBot extends TelegramWebhookBot {
     private final MessageHandler handler;
 
     @SuppressWarnings("unchecked")
-    @Override
-    public BotApiMethod onWebhookUpdateReceived(Update update) {
+    public void updateMessage(String token, Update update) {
+        if(!token.equals(botToken)) throw new IllegalArgumentException("Invalid token");
         handler.processMessage(update.getMessage()).forEach(m -> {
             try {
                 execute(m);
@@ -22,6 +22,10 @@ public class WinenaBot extends TelegramWebhookBot {
                 e.printStackTrace();
             }
         });
+    }
+
+    @Override
+    public BotApiMethod onWebhookUpdateReceived(Update update) {
         return null;
     }
 

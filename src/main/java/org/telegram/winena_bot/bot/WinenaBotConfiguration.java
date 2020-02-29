@@ -17,12 +17,14 @@ public class WinenaBotConfiguration {
     private String botName;
     @Value("${bot.token}")
     private String botToken;
+    @Value("${bot.path}")
+    private String botPath;
 
     @Bean
     @SneakyThrows
     WinenaBot winenaBot() {
         ApiContextInitializer.init();
-        WinenaBot bot = new WinenaBot(botName, botToken, messageHandler);
+        WinenaBot bot = new WinenaBot(botName, botToken, botPath, messageHandler);
 
         TelegramBotsApi botApi = new TelegramBotsApi();
         botApi.registerBot(bot);

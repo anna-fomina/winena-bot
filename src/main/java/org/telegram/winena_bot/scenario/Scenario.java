@@ -1,4 +1,4 @@
-package org.telegram.winena_bot.service;
+package org.telegram.winena_bot.scenario;
 
 public enum Scenario {
     NEW,

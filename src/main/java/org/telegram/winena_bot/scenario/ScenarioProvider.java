@@ -1,7 +1,7 @@
-package org.telegram.winena_bot.service;
+package org.telegram.winena_bot.scenario;
 
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.winena_bot.dto.ScenarioResponseDTO;
+import org.telegram.winena_bot.scenario.dto.ScenarioResponseDTO;
 
 public interface ScenarioProvider {
     boolean isSupported(Scenario scenario);

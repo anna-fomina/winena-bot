@@ -1,10 +1,10 @@
-package org.telegram.winena_bot.jpa;
+package org.telegram.winena_bot.scenario.jpa;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.telegram.winena_bot.service.Scenario;
+import org.telegram.winena_bot.scenario.Scenario;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

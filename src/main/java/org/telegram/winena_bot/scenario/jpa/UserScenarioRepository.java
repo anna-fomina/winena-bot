@@ -1,4 +1,4 @@
-package org.telegram.winena_bot.jpa;
+package org.telegram.winena_bot.scenario.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

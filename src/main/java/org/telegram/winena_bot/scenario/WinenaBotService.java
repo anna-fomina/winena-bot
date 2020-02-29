@@ -1,16 +1,16 @@
-package org.telegram.winena_bot.service;
+package org.telegram.winena_bot.scenario;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.winena_bot.bot.WinenaBot;
-import org.telegram.winena_bot.jpa.UserScenario;
-import org.telegram.winena_bot.jpa.UserScenarioRepository;
+import org.telegram.winena_bot.scenario.jpa.UserScenario;
+import org.telegram.winena_bot.scenario.jpa.UserScenarioRepository;
 
 import java.util.Collection;
 
-import static org.telegram.winena_bot.service.Scenario.NEW;
+import static org.telegram.winena_bot.scenario.Scenario.NEW;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +31,7 @@ public class WinenaBotService {
         if(user.getScenario() != NEW && message.getText() != null && !message.getText().equals("/start")) {
             var response = getScenarioProvider(user.getScenario()).getResponse(message);
             responseStatus = response.scenario;
-            bot.execute(response.message);
+            if(response.message != null) bot.execute(response.message);
         }
 
         var request = getScenarioProvider(responseStatus).getRequest(message);

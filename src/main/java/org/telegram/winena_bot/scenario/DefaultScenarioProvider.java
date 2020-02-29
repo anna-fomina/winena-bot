@@ -1,13 +1,16 @@
-package org.telegram.winena_bot.service;
+package org.telegram.winena_bot.scenario;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.winena_bot.dto.ScenarioResponseDTO;
+import org.telegram.winena_bot.helper.BotHelper;
+import org.telegram.winena_bot.scenario.dto.ScenarioResponseDTO;
 
-import static org.telegram.winena_bot.service.Scenario.*;
+import java.util.List;
 
-@Component
+import static org.telegram.winena_bot.scenario.Scenario.*;
+
+@Service
 public class DefaultScenarioProvider implements ScenarioProvider {
     private final String DRINK_TODAY_BTN = "\uD83C\uDF77Можно немного винишка?";
 
@@ -22,7 +25,7 @@ public class DefaultScenarioProvider implements ScenarioProvider {
                 message.getChatId(),
                 "Привет, красотка, я - Winena Бот!✌\n" +
                         "Если сомневаешься, пить сегодня винишко или нет - спроси у меня!\uD83D\uDE1C",
-                DRINK_TODAY_BTN
+                List.of(DRINK_TODAY_BTN)
         );
         return ScenarioResponseDTO.builder()
                 .message(m)

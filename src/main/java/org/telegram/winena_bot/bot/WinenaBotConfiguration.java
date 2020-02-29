@@ -17,16 +17,18 @@ public class WinenaBotConfiguration {
     private String botName;
     @Value("${bot.token}")
     private String botToken;
-    @Value("${bot.path}")
-    private String botPath;
+    @Value("${bot.url.external}")
+    private String botUrlExternal;
+    @Value("${bot.url.internal}")
+    private String botUrlInternal;
 
     @Bean
     @SneakyThrows
     WinenaBot winenaBot() {
         ApiContextInitializer.init();
-        WinenaBot bot = new WinenaBot(botName, botToken, botPath, messageHandler);
+        WinenaBot bot = new WinenaBot(botName, botToken, messageHandler);
 
-        TelegramBotsApi botApi = new TelegramBotsApi();
+        TelegramBotsApi botApi = new TelegramBotsApi(botUrlExternal, botUrlInternal);
         botApi.registerBot(bot);
 
         return bot;

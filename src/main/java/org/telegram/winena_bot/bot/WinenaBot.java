@@ -10,7 +10,6 @@ import org.telegram.winena_bot.service.MessageHandler;
 public class WinenaBot extends TelegramWebhookBot {
     private final String botName;
     private final String botToken;
-    private final String botPath;
     private final MessageHandler handler;
 
     @SuppressWarnings("unchecked")
@@ -38,6 +37,6 @@ public class WinenaBot extends TelegramWebhookBot {
 
     @Override
     public String getBotPath() {
-        return botPath;
+        return botToken;
     }
 }

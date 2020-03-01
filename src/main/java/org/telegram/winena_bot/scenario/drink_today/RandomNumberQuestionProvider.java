@@ -3,6 +3,7 @@ package org.telegram.winena_bot.scenario.drink_today;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.winena_bot.helper.BotHelper;
+import org.telegram.winena_bot.scenario.exception.InvalidAnswerException;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -35,7 +36,7 @@ public class RandomNumberQuestionProvider implements DrinkTodayQuestionProvider 
 
     @Override
     public int checkResponse(String text) {
-        if(!List.of(ONE, TWO, THREE, FOUR, FIVE, SIX).contains(text)) return -1;
+        if(!List.of(ONE, TWO, THREE, FOUR, FIVE, SIX).contains(text)) throw new InvalidAnswerException();
         return ThreadLocalRandom.current().nextInt(10, 100);
     }
 }

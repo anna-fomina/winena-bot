@@ -11,12 +11,10 @@ import org.telegram.winena_bot.scenario.drink_today.jpa.DrinkTodayRepository;
 import org.telegram.winena_bot.scenario.dto.ScenarioResponseDTO;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static java.util.stream.Collectors.toList;
-import static org.telegram.winena_bot.scenario.Scenario.DEFAULT;
-import static org.telegram.winena_bot.scenario.Scenario.DRINK_TODAY;
+import static org.telegram.winena_bot.scenario.Scenario.*;
 
 @Component
 @RequiredArgsConstructor
@@ -33,52 +31,39 @@ public class DrinkTodayScenarioProvider implements ScenarioProvider {
         return providers.stream().filter(p -> p.getName().equals(name)).findFirst().orElseThrow();
     }
 
-    private Optional<DrinkTodayQuestionProvider> findOpenQuestion(int userId) {
-        return repository.findAllByUserIdAndPoints(userId, -1).stream()
-                .map(q -> getProvider(q.getQuestion())).findFirst();
-    }
+    private DrinkToday findOrCreateQuestion(int userId) {
+        var questions = repository.findAllByUserId(userId);
 
-    private Optional<DrinkTodayQuestionProvider> findOpenOrNewQuestion(int userId) {
-        var openQuestion = findOpenQuestion(userId);
-        if(openQuestion.isPresent()) return openQuestion;
+        var openQuestion = questions.stream().filter(q -> q.getPoints() == -1).findFirst();
+        if(openQuestion.isPresent()) return openQuestion.get();
 
-        var oldQuestions = repository.findAllByUserId(userId).stream().map(DrinkToday::getQuestion).collect(toList());
-        return providers.stream()
-                .filter(p -> !oldQuestions.contains(p.getName()))
-                .findAny();
+        var questionNames = questions.stream().map(DrinkToday::getQuestion).collect(toList());
+        var newName = providers.stream()
+                .filter(p -> !questionNames.contains(p.getName()))
+                .findAny().map(DrinkTodayQuestionProvider::getName).orElseThrow();
+
+        return repository.save(new DrinkToday()
+                .setUserId(userId)
+                .setQuestion(newName)
+                .setPoints(-1));
     }
 
     @Override
     public ScenarioResponseDTO getRequest(Message message) {
-        var userId = message.getFrom().getId();
-        var newQuestion = findOpenOrNewQuestion(userId);
-        if(newQuestion.isEmpty()) {
-            return getErrorResponse(message.getChatId());
-        } else {
-            repository.save(new DrinkToday()
-                    .setUserId(userId)
-                    .setQuestion(newQuestion.get().getName())
-                    .setPoints(-1)
-            );
-            return ScenarioResponseDTO.builder()
-                    .message(newQuestion.get().getQuestion(message.getChatId()))
-                    .scenario(DRINK_TODAY)
-                    .build();
+        var question = findOrCreateQuestion(message.getFrom().getId());
+
+        return ScenarioResponseDTO.builder()
+                .message(getProvider(question.getQuestion()).getQuestion(message.getChatId()))
+                .scenario(DRINK_TODAY)
+                .build();
         }
-    }
 
     @Override
     public ScenarioResponseDTO getResponse(Message message) {
-        var userId = message.getFrom().getId();
-        var questions = repository.findAllByUserId(userId);
+        var questions = repository.findAllByUserId(message.getFrom().getId());
 
-        var openQuestion = questions.stream().filter(q -> q.getPoints() == -1).findFirst();
-        if(openQuestion.isEmpty()) return getErrorResponse(message.getChatId());
-
-        var provider = getProvider(openQuestion.get().getQuestion());
-
-        var points = provider.checkResponse(message.getText());
-        if(points == -1) return getRepeatResponse(message.getChatId());
+        var openQuestion = questions.stream().filter(q -> q.getPoints() == -1).findFirst().orElseThrow(IllegalStateException::new);
+        var points = getProvider(openQuestion.getQuestion()).checkResponse(message.getText());
 
         if(questions.size() == providers.size() || (questions.size() > 3 && ThreadLocalRandom.current().nextBoolean())) {
             boolean result = (questions.stream().map(DrinkToday::getPoints).reduce(Integer::sum).orElse(0) + points)
@@ -86,40 +71,24 @@ public class DrinkTodayScenarioProvider implements ScenarioProvider {
             repository.deleteInBatch(questions);
             return result ? getYesResponse(message.getChatId()) : getNoResponse(message.getChatId());
         } else {
-            repository.save(openQuestion.get().setPoints(points));
+            repository.save(openQuestion.setPoints(points));
             return ScenarioResponseDTO.builder()
                     .scenario(DRINK_TODAY)
                     .build();
-
         }
-    }
-
-    private ScenarioResponseDTO getErrorResponse(long chatId) {
-        return ScenarioResponseDTO.builder()
-                .message(BotHelper.getSendMessage(chatId, "Что-то пошло не так. Попробуем сначала!\uD83D\uDE4F"))
-                .scenario(DEFAULT)
-                .build();
-    }
-
-
-    private ScenarioResponseDTO getRepeatResponse(long chatId) {
-        return ScenarioResponseDTO.builder()
-                .message(BotHelper.getSendMessage(chatId, "Что-то непонятное...\uD83D\uDE35"))
-                .scenario(DRINK_TODAY)
-                .build();
     }
 
     private ScenarioResponseDTO getYesResponse(long chatId) {
         return ScenarioResponseDTO.builder()
                 .message(BotHelper.getSendMessage(chatId, "Поздравляю!\uD83D\uDE03 Сегодня винишко пить можно!\uD83D\uDC83"))
-                .scenario(DEFAULT)
+                .scenario(FINISH)
                 .build();
     }
 
     private ScenarioResponseDTO getNoResponse(long chatId) {
         return ScenarioResponseDTO.builder()
                 .message(BotHelper.getSendMessage(chatId, "Oh, no! Лучше сегодня пить не стоит..\uD83D\uDE14"))
-                .scenario(DEFAULT)
+                .scenario(FINISH)
                 .build();
     }
 }

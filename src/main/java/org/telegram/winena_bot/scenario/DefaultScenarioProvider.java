@@ -17,7 +17,7 @@ public class DefaultScenarioProvider implements ScenarioProvider {
 
     @Override
     public boolean isSupported(Scenario scenario) {
-        return scenario == NEW || scenario == DEFAULT;
+        return scenario == DEFAULT;
     }
 
     @Override

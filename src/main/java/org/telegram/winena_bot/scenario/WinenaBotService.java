@@ -14,7 +14,6 @@ import org.telegram.winena_bot.scenario.jpa.UserScenarioRepository;
 import java.util.Collection;
 
 import static org.telegram.winena_bot.scenario.Scenario.DEFAULT;
-import static org.telegram.winena_bot.scenario.Scenario.NEW;
 
 @Service
 @RequiredArgsConstructor
@@ -28,11 +27,13 @@ public class WinenaBotService {
     @SneakyThrows
     public void processMessage(Message message) {
         UserScenario user = repository.findById(message.getFrom().getId()).orElseGet(() ->
-                repository.save(new UserScenario().setUserId(message.getFrom().getId()).setScenario(NEW)));
+                repository.save(new UserScenario().setUserId(message.getFrom().getId()).setScenario(DEFAULT)));
 
         Scenario responseStatus = user.getScenario();
 
-        if(user.getScenario() != NEW && message.getText() != null && !message.getText().equals("/start")) {
+        if(message.getText() != null && message.getText().equals("/start")) {
+            responseStatus = DEFAULT;
+        } else {
             try {
                 var response = getScenarioProvider(user.getScenario()).getResponse(message);
                 responseStatus = response.scenario;

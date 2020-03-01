@@ -11,6 +11,7 @@ import java.util.List;
 public class CompanyQuestionProvider implements DrinkTodayQuestionProvider {
     private final String NAME = "company";
     private final String ALONE = "\uD83D\uDC78Одна";
+    private final String CAT = "\uD83D\uDC08С кошкой";
     private final String BOYFRIEND = "\uD83D\uDC6BС парнем";
     private final String FRIEND = "\uD83D\uDC6FС подругой";
     private final String PARTY = "\uD83D\uDC7BУ нас целая вечеринка!";
@@ -26,6 +27,7 @@ public class CompanyQuestionProvider implements DrinkTodayQuestionProvider {
                 chatId,
                 "Ты одна или с компанией?\uD83D\uDE4B",
                 List.of(ALONE),
+                List.of(CAT),
                 List.of(BOYFRIEND),
                 List.of(FRIEND),
                 List.of(PARTY)
@@ -36,6 +38,7 @@ public class CompanyQuestionProvider implements DrinkTodayQuestionProvider {
     @Override
     public int checkResponse(String text) {
         if(text.equals(ALONE)) return 20;
+        if(text.equals(CAT)) return 30;
         if(text.equals(BOYFRIEND)) return 40;
         if(text.equals(FRIEND)) return 60;
         if(text.equals(PARTY)) return 80;

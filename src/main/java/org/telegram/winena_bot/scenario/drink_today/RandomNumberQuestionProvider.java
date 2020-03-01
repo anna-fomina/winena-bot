@@ -17,6 +17,7 @@ public class RandomNumberQuestionProvider implements DrinkTodayQuestionProvider 
     private final String FOUR = "4⃣";
     private final String FIVE = "5⃣";
     private final String SIX = "6⃣";
+    private final String INFINITY = "1⃣0⃣0⃣50⃣0⃣⃣";
 
     @Override
     public String getName() {
@@ -29,14 +30,15 @@ public class RandomNumberQuestionProvider implements DrinkTodayQuestionProvider 
                 chatId,
                 "Может нам подскажет судьба\uD83C\uDFB0. Выбери любое число\uD83C\uDFB2",
                 List.of(ONE, TWO, THREE),
-                List.of(FOUR, FIVE, SIX)
+                List.of(FOUR, FIVE, SIX),
+                List.of(INFINITY)
         );
 
     }
 
     @Override
     public int checkResponse(String text) {
-        if(!List.of(ONE, TWO, THREE, FOUR, FIVE, SIX).contains(text)) throw new InvalidAnswerException();
+        if(!List.of(ONE, TWO, THREE, FOUR, FIVE, SIX, INFINITY).contains(text)) throw new InvalidAnswerException();
         return ThreadLocalRandom.current().nextInt(10, 100);
     }
 }

@@ -24,7 +24,7 @@ public class CompanyQuestionProvider implements DrinkTodayQuestionProvider {
     public SendMessage getQuestion(long chatId) {
         return BotHelper.getSendMessage(
                 chatId,
-                "Ты одна или с компанией?\uD83D\uDC6A",
+                "Ты одна или с компанией?\uD83D\uDE4B",
                 List.of(ALONE),
                 List.of(BOYFRIEND),
                 List.of(FRIEND),

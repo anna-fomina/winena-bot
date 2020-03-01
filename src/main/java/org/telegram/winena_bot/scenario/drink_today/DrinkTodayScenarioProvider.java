@@ -40,6 +40,7 @@ public class DrinkTodayScenarioProvider implements ScenarioProvider {
         var questionNames = questions.stream().map(DrinkToday::getQuestion).collect(toList());
         var newName = providers.stream()
                 .filter(p -> !questionNames.contains(p.getName()))
+                .sorted((o1, o2) -> ThreadLocalRandom.current().nextInt(-1, 2))
                 .findAny().map(DrinkTodayQuestionProvider::getName).orElseThrow();
 
         return repository.save(new DrinkToday()

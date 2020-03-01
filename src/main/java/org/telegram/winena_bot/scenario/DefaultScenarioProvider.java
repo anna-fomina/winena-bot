@@ -29,7 +29,7 @@ public class DefaultScenarioProvider implements ScenarioProvider {
                 List.of(DRINK_TODAY_BTN)
         );
         return ScenarioResponseDTO.builder()
-                .message(List.of(m))
+                .message(m)
                 .scenario(DEFAULT)
                 .build();
     }
@@ -38,7 +38,7 @@ public class DefaultScenarioProvider implements ScenarioProvider {
     public ScenarioResponseDTO getResponse(Message message) {
         if(message.getText().equals(DRINK_TODAY_BTN)) {
             return ScenarioResponseDTO.builder()
-                    .message(List.of(BotHelper.getSendMessage(message.getChatId(), "Давай попробуем узнать!\uD83D\uDE0B")))
+                    .message(BotHelper.getSendMessage(message.getChatId(), "Давай попробуем узнать!\uD83D\uDE0B"))
                     .scenario(DRINK_TODAY)
                     .build();
         }

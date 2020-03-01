@@ -36,7 +36,8 @@ public class WinenaBotService {
             try {
                 var response = getScenarioProvider(user.getScenario()).getResponse(message);
                 responseStatus = response.scenario;
-                bot.send(response.message);
+                if (response.message != null) bot.execute(response.message);
+                if (response.photo != null) bot.execute(response.photo);
             } catch (InvalidAnswerException e) {
                 bot.execute(BotHelper.getSendMessage(message.getChatId(), "Что-то непонятное...\uD83D\uDE35"));
             } catch (IllegalStateException e) {
@@ -47,7 +48,8 @@ public class WinenaBotService {
 
         var request = getScenarioProvider(responseStatus).getRequest(message);
         repository.save(user.setScenario(request.scenario));
-        bot.send(request.message);
+        bot.execute(request.message);
+        if(request.photo != null) bot.execute(request.photo);
     }
 
     private ScenarioProvider getScenarioProvider(Scenario scenario) {

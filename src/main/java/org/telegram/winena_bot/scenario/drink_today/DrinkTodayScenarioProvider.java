@@ -2,7 +2,6 @@ package org.telegram.winena_bot.scenario.drink_today;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.winena_bot.helper.BotHelper;
 import org.telegram.winena_bot.scenario.Scenario;
@@ -13,9 +12,7 @@ import org.telegram.winena_bot.scenario.drink_today.jpa.DrinkTodayRepository;
 import org.telegram.winena_bot.scenario.drink_today.questions.DrinkTodayQuestionProvider;
 import org.telegram.winena_bot.scenario.dto.ScenarioResponseDTO;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static java.util.stream.Collectors.toList;
@@ -61,7 +58,7 @@ public class DrinkTodayScenarioProvider implements ScenarioProvider {
         var question = findOrCreateQuestion(message.getFrom().getId());
 
         return ScenarioResponseDTO.builder()
-                .message(List.of(getProvider(question.getQuestion()).getQuestion(message.getChatId())))
+                .message(getProvider(question.getQuestion()).getQuestion(message.getChatId()))
                 .scenario(DRINK_TODAY)
                 .build();
         }
@@ -87,25 +84,21 @@ public class DrinkTodayScenarioProvider implements ScenarioProvider {
     }
 
     private ScenarioResponseDTO getYesResponse(long chatId) {
-        var response = new ArrayList<PartialBotApiMethod>();
-        response.add(BotHelper.getSendMessage(chatId, "Поздравляю!\uD83D\uDE03 Сегодня винишко пить можно!\uD83D\uDC83"));
-        memRepository.findMem("YES").stream().findFirst().ifPresent(m -> response.add(
-                BotHelper.getSendPhoto(chatId, m.getFileId())
-        ));
+        var photoId = memRepository.findMem("YES").stream().map(s -> BotHelper.getSendPhoto(chatId, s.getFileId()))
+                .findFirst().orElse(null);
         return ScenarioResponseDTO.builder()
-                .message(response)
+                .message(BotHelper.getSendMessage(chatId, "Поздравляю!\uD83D\uDE03 Сегодня винишко пить можно!\uD83D\uDC83"))
+                .photo(photoId)
                 .scenario(FINISH)
                 .build();
     }
 
     private ScenarioResponseDTO getNoResponse(long chatId) {
-        var response = new ArrayList<PartialBotApiMethod>();
-        response.add(BotHelper.getSendMessage(chatId, "Oh, no! Лучше сегодня пить не стоит..\uD83D\uDE14"));
-        memRepository.findMem("NO").stream().findFirst().ifPresent(m -> response.add(
-                BotHelper.getSendPhoto(chatId, m.getFileId())
-        ));
+        var photoId = memRepository.findMem("NO").stream().map(s -> BotHelper.getSendPhoto(chatId, s.getFileId()))
+                .findFirst().orElse(null);
         return ScenarioResponseDTO.builder()
-                .message(response)
+                .message(BotHelper.getSendMessage(chatId, "Oh, no! Лучше сегодня пить не стоит..\uD83D\uDE14"))
+                .photo(photoId)
                 .scenario(FINISH)
                 .build();
     }

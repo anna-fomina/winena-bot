@@ -13,7 +13,6 @@ import org.telegram.winena_bot.scenario.drink_today.jpa.DrinkTodayMemRepository;
 import org.telegram.winena_bot.scenario.dto.ScenarioResponseDTO;
 import org.telegram.winena_bot.scenario.exception.InvalidAnswerException;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import static org.telegram.winena_bot.scenario.Scenario.DEFAULT;
@@ -36,7 +35,7 @@ public class DrinkTodayMemScenarioProvider implements ScenarioProvider {
                 "Upload mem with 'YES' or 'NO' text"
         );
         return ScenarioResponseDTO.builder()
-                .message(List.of(m))
+                .message(m)
                 .scenario(DRINK_TODAY_MEM)
                 .build();
     }
@@ -49,7 +48,7 @@ public class DrinkTodayMemScenarioProvider implements ScenarioProvider {
                 .setType(message.getText())
                 .setFileId(photoId));
         return ScenarioResponseDTO.builder()
-                .message(List.of(BotHelper.getSendMessage(message.getChatId(), "Saved")))
+                .message(BotHelper.getSendMessage(message.getChatId(), "Saved"))
                 .scenario(DEFAULT)
                 .build();
     }

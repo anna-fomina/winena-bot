@@ -5,6 +5,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.winena_bot.helper.BotHelper;
 import org.telegram.winena_bot.scenario.dto.ScenarioResponseDTO;
+import org.telegram.winena_bot.scenario.exception.InvalidAnswerException;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class DefaultScenarioProvider implements ScenarioProvider {
                 List.of(DRINK_TODAY_BTN)
         );
         return ScenarioResponseDTO.builder()
-                .message(m)
+                .message(List.of(m))
                 .scenario(DEFAULT)
                 .build();
     }
@@ -37,13 +38,10 @@ public class DefaultScenarioProvider implements ScenarioProvider {
     public ScenarioResponseDTO getResponse(Message message) {
         if(message.getText().equals(DRINK_TODAY_BTN)) {
             return ScenarioResponseDTO.builder()
-                    .message(BotHelper.getSendMessage(message.getChatId(), "Давай попробуем узнать!\uD83D\uDE0B"))
+                    .message(List.of(BotHelper.getSendMessage(message.getChatId(), "Давай попробуем узнать!\uD83D\uDE0B")))
                     .scenario(DRINK_TODAY)
                     .build();
         }
-        return ScenarioResponseDTO.builder()
-                .message(BotHelper.getSendMessage(message.getChatId(), "Извини, не могу прочитать, что написано\uD83D\uDE1E"))
-                .scenario(DEFAULT)
-                .build();
+        throw new InvalidAnswerException();
     }
 }

@@ -25,7 +25,6 @@ public class WinenaBotService {
     private final DefaultScenarioProvider defaultProvider;
     private final UserScenarioRepository repository;
 
-    @SuppressWarnings("unchecked")
     @SneakyThrows
     public void processMessage(Message message) {
         UserScenario user = repository.findById(message.getFrom().getId()).orElseGet(() ->
@@ -37,7 +36,7 @@ public class WinenaBotService {
             try {
                 var response = getScenarioProvider(user.getScenario()).getResponse(message);
                 responseStatus = response.scenario;
-                if (response.message != null) bot.execute(response.message);
+                bot.send(response.message);
             } catch (InvalidAnswerException e) {
                 bot.execute(BotHelper.getSendMessage(message.getChatId(), "Что-то непонятное...\uD83D\uDE35"));
             } catch (IllegalStateException e) {
@@ -48,7 +47,7 @@ public class WinenaBotService {
 
         var request = getScenarioProvider(responseStatus).getRequest(message);
         repository.save(user.setScenario(request.scenario));
-        bot.execute(request.message);
+        bot.send(request.message);
     }
 
     private ScenarioProvider getScenarioProvider(Scenario scenario) {

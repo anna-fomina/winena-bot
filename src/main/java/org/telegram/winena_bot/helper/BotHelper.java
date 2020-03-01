@@ -1,6 +1,7 @@
 package org.telegram.winena_bot.helper;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
@@ -35,6 +36,13 @@ public class BotHelper {
                 .setResizeKeyboard(true)
         );
 
+        return s;
+    }
+
+    public static SendPhoto getSendPhoto(long chatId, String photoId) {
+        SendPhoto s = new SendPhoto();
+        s.setChatId(chatId);
+        s.setPhoto(photoId);
         return s;
     }
 }

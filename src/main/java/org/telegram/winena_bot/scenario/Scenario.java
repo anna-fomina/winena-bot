@@ -4,5 +4,6 @@ public enum Scenario {
     NEW,
     DEFAULT,
     DRINK_TODAY,
+    DRINK_TODAY_MEM,
     FINISH
 }

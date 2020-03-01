@@ -1,4 +1,4 @@
-package org.telegram.winena_bot.scenario.drink_today;
+package org.telegram.winena_bot.scenario.drink_today.questions;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 

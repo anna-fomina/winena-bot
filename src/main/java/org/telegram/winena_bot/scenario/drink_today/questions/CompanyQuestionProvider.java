@@ -1,4 +1,4 @@
-package org.telegram.winena_bot.scenario.drink_today;
+package org.telegram.winena_bot.scenario.drink_today.questions;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,7 +11,7 @@ import java.util.List;
 public class CompanyQuestionProvider implements DrinkTodayQuestionProvider {
     private final String NAME = "company";
     private final String ALONE = "\uD83D\uDC78Одна";
-    private final String CAT = "\uD83D\uDC08С кошкой";
+    private final String CAT = "\uD83D\uDE3CС кошкой";
     private final String BOYFRIEND = "\uD83D\uDC6BС парнем";
     private final String FRIEND = "\uD83D\uDC6FС подругой";
     private final String PARTY = "\uD83D\uDC7BУ нас целая вечеринка!";

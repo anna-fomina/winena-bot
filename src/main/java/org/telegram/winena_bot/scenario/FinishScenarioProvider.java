@@ -26,7 +26,7 @@ public class FinishScenarioProvider implements ScenarioProvider {
                 List.of("\uD83D\uDC46В начало")
         );
         return ScenarioResponseDTO.builder()
-                .message(m)
+                .message(List.of(m))
                 .scenario(FINISH)
                 .build();
     }

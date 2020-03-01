@@ -17,7 +17,7 @@ public class RandomNumberQuestionProvider implements DrinkTodayQuestionProvider 
     private final String FOUR = "4⃣";
     private final String FIVE = "5⃣";
     private final String SIX = "6⃣";
-    private final String INFINITY = "1⃣0⃣0⃣50⃣0⃣⃣";
+    private final String INFINITY = "1⃣0⃣0⃣5⃣0⃣0⃣";
 
     @Override
     public String getName() {

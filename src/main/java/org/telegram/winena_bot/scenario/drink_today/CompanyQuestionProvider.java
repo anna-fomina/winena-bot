@@ -26,10 +26,8 @@ public class CompanyQuestionProvider implements DrinkTodayQuestionProvider {
         return BotHelper.getSendMessage(
                 chatId,
                 "Ты одна или с компанией?\uD83D\uDE4B",
-                List.of(ALONE),
-                List.of(CAT),
-                List.of(BOYFRIEND),
-                List.of(FRIEND),
+                List.of(ALONE, CAT),
+                List.of(BOYFRIEND, FRIEND),
                 List.of(PARTY)
         );
 

@@ -13,7 +13,7 @@ public class MoodQuestionProvider implements DrinkTodayQuestionProvider {
     private final String COOL = "\uD83C\uDF1EВсе замечтально";
     private final String NORMAL = "\uD83D\uDE0AНормально";
     private final String TIRED = "\uD83D\uDE11Очень устала";
-    private final String COMPLICATED = "⛅⛅⛅⛅⛅⛅⛅⛅\uD83D\uDDA4На сердце боль, взгляд смотрит в небо...";
+    private final String COMPLICATED = "\uD83D\uDDA4На сердце боль, взгляд смотрит в небо...";
     private final String BAD = "\uD83C\uDF1AВсе плохо";
 
     @Override
@@ -26,12 +26,10 @@ public class MoodQuestionProvider implements DrinkTodayQuestionProvider {
         return BotHelper.getSendMessage(
                 chatId,
                 "Как настроение?\uD83D\uDE4B",
-                List.of(COOL),
-                List.of(NORMAL),
-                List.of(TIRED),
-                List.of(COMPLICATED),
-                List.of(BAD)
-        );
+                List.of(COOL, NORMAL),
+                List.of(TIRED, BAD),
+                List.of(COMPLICATED)
+                );
 
     }
 

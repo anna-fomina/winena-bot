@@ -43,7 +43,7 @@ public class DrinkTodayMemScenarioProvider implements ScenarioProvider {
     @Override
     public ScenarioResponseDTO getResponse(Message message) {
         var photoId = message.getPhoto().stream().map(PhotoSize::getFileId).findFirst().orElseThrow(InvalidAnswerException::new);
-        if(Stream.of("YES", "NO").noneMatch(s -> s.equals(photoId))) throw new InvalidAnswerException();
+        if(Stream.of("YES", "NO").noneMatch(s -> s.equals(message.getCaption()))) throw new InvalidAnswerException();
         repository.save(new DrinkTodayMem()
                 .setType(message.getText())
                 .setFileId(photoId));

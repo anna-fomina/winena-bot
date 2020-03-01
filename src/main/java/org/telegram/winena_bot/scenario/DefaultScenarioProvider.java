@@ -42,6 +42,11 @@ public class DefaultScenarioProvider implements ScenarioProvider {
                     .scenario(DRINK_TODAY)
                     .build();
         }
+        if(message.getText().equals("/uploadMem")) {
+            return ScenarioResponseDTO.builder()
+                    .scenario(DRINK_TODAY_MEM)
+                    .build();
+        }
         throw new InvalidAnswerException();
     }
 }

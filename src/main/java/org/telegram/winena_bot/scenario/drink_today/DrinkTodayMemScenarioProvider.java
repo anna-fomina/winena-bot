@@ -46,7 +46,7 @@ public class DrinkTodayMemScenarioProvider implements ScenarioProvider {
         var photoId = message.getPhoto().stream().map(PhotoSize::getFileId).findFirst().orElseThrow(InvalidAnswerException::new);
         if(Stream.of("YES", "NO").noneMatch(s -> s.equals(message.getCaption()))) throw new InvalidAnswerException();
         repository.save(new DrinkTodayMem()
-                .setType(message.getText())
+                .setType(message.getCaption())
                 .setFileId(photoId));
         return ScenarioResponseDTO.builder()
                 .message(BotHelper.getSendMessage(message.getChatId(), "Saved"))

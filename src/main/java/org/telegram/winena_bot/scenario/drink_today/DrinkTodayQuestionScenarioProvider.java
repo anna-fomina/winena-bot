@@ -42,8 +42,8 @@ public class DrinkTodayQuestionScenarioProvider implements ScenarioProvider {
             m = BotHelper.getSendMessage(message.getChatId(), "Напиши вопрос. Максимальный размер - 255 символов.");
         } else {
             m = BotHelper.getSendMessage(message.getChatId(), "Напиши ответы к вопросу\n" +
-                    "__" + question.get().getText() + "__\n" +
-                    "в формате \n**text**\n**points**",
+                     question.get().getText() + "\n" +
+                    "в формате \ntext\npoints",
                     List.of(COMPLETE), List.of(REMOVE));
         }
         return ScenarioResponseDTO.builder()

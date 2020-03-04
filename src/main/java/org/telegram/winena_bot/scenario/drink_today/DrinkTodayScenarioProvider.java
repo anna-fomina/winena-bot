@@ -38,7 +38,8 @@ public class DrinkTodayScenarioProvider implements ScenarioProvider {
         if(openQuestion.isPresent()) return openQuestion.get();
 
         var questionIds = questions.stream().map(DrinkToday::getQuestionId).collect(toList());
-        var newQuestion = questionRepository.findAllByIdNotIn(questionIds).stream()
+        var newQuestions = questions.size() == 0 ? questionRepository.findAll() : questionRepository.findAllByIdNotIn(questionIds);
+        var newQuestion = newQuestions.stream()
                 .sorted((o1, o2) -> ThreadLocalRandom.current().nextInt(-1, 2))
                 .findAny().orElseThrow();
 

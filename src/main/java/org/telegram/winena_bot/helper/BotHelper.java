@@ -5,6 +5,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -29,6 +30,28 @@ public class BotHelper {
             }
             return row;
         }).collect(toList());
+
+        s.setReplyMarkup(new ReplyKeyboardMarkup()
+                .setKeyboard(buttons)
+                .setOneTimeKeyboard(true)
+                .setResizeKeyboard(true)
+        );
+
+        return s;
+    }
+
+    public static SendMessage getSendMessage(long chatId, String text, List<String> answers) {
+        SendMessage s = getSendMessage(chatId, text);
+
+        var rowSize = answers.size() <=3 ? answers.size() : answers.size() / 3;
+        var buttons = new ArrayList<KeyboardRow>();
+        for (String answer : answers) {
+            KeyboardRow row = new KeyboardRow();
+            for (int j = 0; j < rowSize; j++) {
+                row.add(answer);
+            }
+            buttons.add(row);
+        }
 
         s.setReplyMarkup(new ReplyKeyboardMarkup()
                 .setKeyboard(buttons)

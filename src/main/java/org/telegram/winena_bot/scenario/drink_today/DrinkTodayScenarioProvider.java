@@ -54,7 +54,7 @@ public class DrinkTodayScenarioProvider implements ScenarioProvider {
         var question = findOrCreateQuestion(message.getFrom().getId());
 
         return ScenarioResponseDTO.builder()
-                .message(questionProvider.getQuestion(question.getId(), message.getChatId()))
+                .message(questionProvider.getQuestion(question.getQuestionId(), message.getChatId()))
                 .scenario(DRINK_TODAY)
                 .build();
         }

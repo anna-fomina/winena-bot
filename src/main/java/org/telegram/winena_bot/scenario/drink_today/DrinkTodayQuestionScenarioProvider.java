@@ -44,7 +44,7 @@ public class DrinkTodayQuestionScenarioProvider implements ScenarioProvider {
             m = BotHelper.getSendMessage(message.getChatId(), "Напиши ответы к вопросу\n" +
                      question.get().getText() + "\n" +
                     "в формате \ntext\npoints",
-                    List.of(COMPLETE), List.of(REMOVE));
+                    List.of(COMPLETE, REMOVE));
         }
         return ScenarioResponseDTO.builder()
                 .message(m)
@@ -91,14 +91,14 @@ public class DrinkTodayQuestionScenarioProvider implements ScenarioProvider {
 
     private ScenarioResponseDTO getSavedMessage(long chatId) {
         return ScenarioResponseDTO.builder()
-                .message(BotHelper.getSendMessage(chatId, "Сохранено", List.of(COMPLETE), List.of(REMOVE)))
+                .message(BotHelper.getSendMessage(chatId, "Сохранено", List.of(COMPLETE, REMOVE)))
                 .scenario(DRINK_TODAY_QUESTION)
                 .build();
     }
 
     private ScenarioResponseDTO getCompleteMessage(long chatId, String text) {
         return ScenarioResponseDTO.builder()
-                .message(BotHelper.getSendMessage(chatId, "Сохранено"))
+                .message(BotHelper.getSendMessage(chatId, text))
                 .scenario(DEFAULT)
                 .build();
     }

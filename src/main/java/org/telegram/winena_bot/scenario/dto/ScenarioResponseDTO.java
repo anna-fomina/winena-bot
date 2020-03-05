@@ -10,5 +10,4 @@ public class ScenarioResponseDTO {
     public final SendMessage message;
     public final SendPhoto photo;
     public final Scenario scenario;
-    public final String state;
 }

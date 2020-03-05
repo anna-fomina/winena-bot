@@ -15,7 +15,7 @@ import static java.util.stream.Collectors.toList;
 
 @Component
 @RequiredArgsConstructor
-public class QuestionProvider {
+public class DrinkTodayQuestionService {
     private final DrinkTodayQuestionRepository questionRepository;
     private final DrinkTodayAnswerRepository answerRepository;
 

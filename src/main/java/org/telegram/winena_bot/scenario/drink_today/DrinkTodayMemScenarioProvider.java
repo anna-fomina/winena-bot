@@ -32,7 +32,7 @@ public class DrinkTodayMemScenarioProvider implements ScenarioProvider {
     public ScenarioResponseDTO getRequest(Message message) {
         SendMessage m = BotHelper.getSendMessage(
                 message.getChatId(),
-                "Upload mem with 'YES' or 'NO' text"
+                "Загрузи изображение с текстом 'YES' или 'NO'"
         );
         return ScenarioResponseDTO.builder()
                 .message(m)
@@ -49,7 +49,7 @@ public class DrinkTodayMemScenarioProvider implements ScenarioProvider {
                 .setType(message.getCaption())
                 .setFileId(photoId));
         return ScenarioResponseDTO.builder()
-                .message(BotHelper.getSendMessage(message.getChatId(), "Saved"))
+                .message(BotHelper.getSendMessage(message.getChatId(), "Сохранено"))
                 .scenario(DEFAULT)
                 .build();
     }

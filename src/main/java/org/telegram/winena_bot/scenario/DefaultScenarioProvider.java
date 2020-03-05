@@ -28,7 +28,7 @@ public class DefaultScenarioProvider implements ScenarioProvider {
                 message.getChatId(),
                 "Привет, красотка!✌\n" +
                         "Если сомневаешься, пить сегодня винишко или нет - спроси у меня!\uD83D\uDE1C",
-                List.of(DRINK_TODAY_BTN)
+                List.of(DRINK_TODAY_BTN, MAKE_DIARY_RECORD_BTN, GET_DIARY_RECORDS_BTN)
         );
         return ScenarioResponseDTO.builder()
                 .message(m)

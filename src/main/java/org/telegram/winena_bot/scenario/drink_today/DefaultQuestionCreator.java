@@ -15,6 +15,13 @@ public class DefaultQuestionCreator {
     private final DrinkTodayQuestionRepository questionRepository;
     private final DrinkTodayAnswerRepository answerRepository;
 
+    private void saveAnswer(long id, String text) {
+        answerRepository.save(new DrinkTodayAnswer()
+                .setQuestionId(id)
+                .setText(text)
+                .setPoints(0));
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void createDefaultCurrency() {
         if(questionRepository.count() == 0) {
@@ -24,26 +31,13 @@ public class DefaultQuestionCreator {
                     .setCompleted(false)
             );
 
-            answerRepository.save(new DrinkTodayAnswer()
-                    .setQuestionId(question.getId())
-                    .setText("1⃣")
-                    .setPoints(0));
-            answerRepository.save(new DrinkTodayAnswer()
-                    .setQuestionId(question.getId())
-                    .setText("2⃣")
-                    .setPoints(0));
-            answerRepository.save(new DrinkTodayAnswer()
-                    .setQuestionId(question.getId())
-                    .setText("3⃣")
-                    .setPoints(0));
-            answerRepository.save(new DrinkTodayAnswer()
-                    .setQuestionId(question.getId())
-                    .setText("4⃣")
-                    .setPoints(0));
-            answerRepository.save(new DrinkTodayAnswer()
-                    .setQuestionId(question.getId())
-                    .setText("1⃣0⃣0⃣5⃣0⃣0⃣")
-                    .setPoints(0));
+            saveAnswer(question.getId(), "1⃣");
+            saveAnswer(question.getId(), "2⃣");
+            saveAnswer(question.getId(), "3⃣");
+            saveAnswer(question.getId(), "4⃣");
+            saveAnswer(question.getId(), "5⃣");
+            saveAnswer(question.getId(), "6⃣");
+            saveAnswer(question.getId(), "1⃣0⃣0⃣5⃣0⃣0⃣");
 
             questionRepository.save(question.setCompleted(true));
         }

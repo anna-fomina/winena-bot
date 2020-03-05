@@ -1,6 +1,7 @@
 package org.telegram.winena_bot.scenario.drink_today;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.winena_bot.helper.BotHelper;
@@ -8,11 +9,11 @@ import org.telegram.winena_bot.scenario.Scenario;
 import org.telegram.winena_bot.scenario.ScenarioProvider;
 import org.telegram.winena_bot.scenario.drink_today.jpa.DrinkToday;
 import org.telegram.winena_bot.scenario.drink_today.jpa.DrinkTodayMemRepository;
+import org.telegram.winena_bot.scenario.drink_today.jpa.DrinkTodayQuestionRepository;
 import org.telegram.winena_bot.scenario.drink_today.jpa.DrinkTodayRepository;
-import org.telegram.winena_bot.scenario.drink_today.questions.DrinkTodayQuestionProvider;
 import org.telegram.winena_bot.scenario.dto.ScenarioResponseDTO;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static java.util.stream.Collectors.toList;
@@ -22,17 +23,14 @@ import static org.telegram.winena_bot.scenario.Scenario.FINISH;
 @Component
 @RequiredArgsConstructor
 public class DrinkTodayScenarioProvider implements ScenarioProvider {
-    private final Collection<DrinkTodayQuestionProvider> providers;
     private final DrinkTodayRepository repository;
     private final DrinkTodayMemRepository memRepository;
+    private final DrinkTodayQuestionRepository questionRepository;
+    private final DrinkTodayQuestionService drinkTodayQuestionService;
 
     @Override
     public boolean isSupported(Scenario scenario) {
         return scenario == DRINK_TODAY;
-    }
-
-    private DrinkTodayQuestionProvider getProvider(String name) {
-        return providers.stream().filter(p -> p.getName().equals(name)).findFirst().orElseThrow();
     }
 
     private DrinkToday findOrCreateQuestion(int userId) {
@@ -41,15 +39,16 @@ public class DrinkTodayScenarioProvider implements ScenarioProvider {
         var openQuestion = questions.stream().filter(q -> q.getPoints() == -1).findFirst();
         if(openQuestion.isPresent()) return openQuestion.get();
 
-        var questionNames = questions.stream().map(DrinkToday::getQuestion).collect(toList());
-        var newName = providers.stream()
-                .filter(p -> !questionNames.contains(p.getName()))
-                .sorted((o1, o2) -> ThreadLocalRandom.current().nextInt(-1, 2))
-                .findAny().map(DrinkTodayQuestionProvider::getName).orElseThrow();
+        var excludedIds = questions.stream().map(DrinkToday::getQuestionId).collect(toList());
+        var newQuestion = questionRepository.findAllRandomOrder(
+                ThreadLocalRandom.current().nextInt(),
+                excludedIds.size() == 0 ? List.of(0L) : excludedIds,
+                PageRequest.of(0, 1)
+        ).get().findFirst().orElseThrow();
 
         return repository.save(new DrinkToday()
                 .setUserId(userId)
-                .setQuestion(newName)
+                .setQuestionId(newQuestion.getId())
                 .setPoints(-1));
     }
 
@@ -58,7 +57,7 @@ public class DrinkTodayScenarioProvider implements ScenarioProvider {
         var question = findOrCreateQuestion(message.getFrom().getId());
 
         return ScenarioResponseDTO.builder()
-                .message(getProvider(question.getQuestion()).getQuestion(message.getChatId()))
+                .message(drinkTodayQuestionService.getQuestion(question.getQuestionId(), message.getChatId()))
                 .scenario(DRINK_TODAY)
                 .build();
         }
@@ -68,9 +67,9 @@ public class DrinkTodayScenarioProvider implements ScenarioProvider {
         var questions = repository.findAllByUserId(message.getFrom().getId());
 
         var openQuestion = questions.stream().filter(q -> q.getPoints() == -1).findFirst().orElseThrow(IllegalStateException::new);
-        var points = getProvider(openQuestion.getQuestion()).checkResponse(message.getText());
+        var points = drinkTodayQuestionService.checkResponse(openQuestion.getQuestionId(), message.getText());
 
-        if(questions.size() == providers.size() || (questions.size() > 3 && ThreadLocalRandom.current().nextBoolean())) {
+        if(questions.size() == questionRepository.count() || (questions.size() > 3 && ThreadLocalRandom.current().nextBoolean())) {
             boolean result = (questions.stream().map(DrinkToday::getPoints).reduce(Integer::sum).orElse(0) + points)
                     / questions.size() >= 50;
             repository.deleteInBatch(questions);

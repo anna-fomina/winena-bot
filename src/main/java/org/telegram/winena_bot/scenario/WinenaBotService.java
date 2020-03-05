@@ -41,7 +41,7 @@ public class WinenaBotService {
                 if (response.photo != null) bot.execute(response.photo);
             } catch (InvalidAnswerException e) {
                 bot.execute(BotHelper.getSendMessage(message.getChatId(), "Что-то непонятное...\uD83D\uDE35"));
-            } catch (IllegalStateException e) {
+            } catch (Exception e) {
                 bot.execute(BotHelper.getSendMessage(message.getChatId(), "Что-то пошло не так. Попробуем сначала!\uD83D\uDE4F"));
                 responseStatus = DEFAULT;
             }

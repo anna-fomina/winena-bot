@@ -41,7 +41,6 @@ public class DrinkTodayScenarioProvider implements ScenarioProvider {
 
         var excludedIds = questions.stream().map(DrinkToday::getQuestionId).collect(toList());
         var newQuestion = questionRepository.findAllRandomOrder(
-                ThreadLocalRandom.current().nextInt(),
                 excludedIds.size() == 0 ? List.of(0L) : excludedIds,
                 PageRequest.of(0, 1)
         ).get().findFirst().orElseThrow();
